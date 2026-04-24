@@ -65,7 +65,27 @@ public class Produto {
             System.out.println("Estoque insuficiente");
         }
     }
+
     public void aumentarEstoque(int quantidade) {
         estoque += quantidade;
+    }
+
+    public void atualizarPreco(double novoPreco) {
+        setPreco(novoPreco);
+        System.out.println("Preço atualizado para R$" + novoPreco);
+    }
+
+    public void atualizarPreco(double novoPreco, double desconto) {
+        double precoComDesconto = novoPreco - (novoPreco * desconto / 100);
+        setPreco(precoComDesconto);
+        System.out.println("Preço atualizado com " + desconto + "% de desconto: R$" + precoComDesconto);
+    }
+
+    public void atualizarPreco(String promocao, double desconto) {
+        if (promocao.equalsIgnoreCase("BLACKFRIDAY")) {
+            double precoPromocional = preco - (preco * desconto / 100);
+            setPreco(precoPromocional);
+            System.out.println("Preço promocional Black Friday: R$" + precoPromocional);
+        }
     }
 }

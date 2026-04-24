@@ -1,33 +1,9 @@
-public class Cliente {
-    private int id;
-    private String nome;
+public class Cliente extends Usuario {
     private int idade;
-    private String email;
-    private String senha;
 
-    // construtor
     public Cliente(int id, String nome, int idade, String email, String senha) {
-        this.id = id;
-        setNome(nome);
+        super(id, nome, email, senha);
         setIdade(idade);
-        setEmail(email);
-        setSenha(senha);
-    }
-
-    // getters e setters
-    public int getId() {
-        return id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        if (nome == null || nome.trim().isEmpty()) {
-            throw new IllegalArgumentException("Nome inválido");
-        }
-        this.nome = nome;
     }
 
     public int getIdade() {
@@ -41,22 +17,22 @@ public class Cliente {
         this.idade = idade;
     }
 
-    public String getEmail() {
-        return email;
+    @Override
+    public void exibirTipoUsuario() {
+        System.out.println("Tipo: Cliente");
     }
 
-    public void setEmail(String email) {
-        if (email == null || !email.contains("@")) {
-            throw new IllegalArgumentException("Email inválido");
-        }
-        this.email = email;
+    @Override
+    public void exibirDados() {
+        super.exibirDados();
+        System.out.println("Idade: " + idade);
     }
 
-    public void setSenha(String senha) {
-        if (senha == null || senha.length() < 5) {
-            throw new IllegalArgumentException("Senha inválida");
-        }
-        this.senha = senha;
+    public boolean isMaiorIdade() {
+        return idade >= 18;
+    }
+
+    public boolean isMaiorIdade(int idadeMinima) {
+        return idade >= idadeMinima;
     }
 }
-

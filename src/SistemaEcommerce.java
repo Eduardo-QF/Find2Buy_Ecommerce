@@ -5,10 +5,10 @@ public class SistemaEcommerce {
     private List<Produto> produtos = new ArrayList<>();
     private List<Pedido> pedidos = new ArrayList<>();
     private Carrinho carrinho = new Carrinho();
-    private Cliente clienteLogado = null;
+    private Usuario usuarioLogado = null;
+    private List<Usuario> usuarios = new ArrayList<>();
     private int contadorPedido = 1;
-    private int contadorCliente = 1;
-    private boolean adminLogado = false;
+    private int contadorUsuario = 1;
 
     Scanner sc = new Scanner(System.in);
 
@@ -22,24 +22,24 @@ public class SistemaEcommerce {
         String senha = sc.nextLine();
 
         if (user.equals("admin") && senha.equals("123")) {
-            adminLogado = true;
+            
+            Administrador admin = new Administrador(contadorUsuario++, "Administrador", "admin@sistema.com", senha, "Gerente", "TI");
+            usuarioLogado = admin;
             System.out.println("Admin logado com sucesso!");
-
-            menuAdmin(); // entra no menu admin
-
+            admin.gerenciarSistema();
+            menuAdmin();
         } else {
             System.out.println("Credenciais inválidas");
         }
     }
 
     public void logoutAdmin() {
-        adminLogado = false;
+        usuarioLogado = null;
         System.out.println("Admin deslogado");
     }
 
     public void cadastrarProduto() {
-
-        if (!adminLogado) {
+        if (!(usuarioLogado instanceof Administrador)) {
             System.out.println("Acesso negado!");
             return;
         }
@@ -56,7 +56,6 @@ public class SistemaEcommerce {
         int estoque = sc.nextInt();
 
         int id = produtos.size() + 1;
-
         Produto p = new Produto(id, nome, preco, estoque);
         produtos.add(p);
 
@@ -64,26 +63,22 @@ public class SistemaEcommerce {
     }
 
     public void alterarProduto() {
-
-        if (!adminLogado) {
+        if (!(usuarioLogado instanceof Administrador)) {
             System.out.println("Acesso negado!");
             return;
         }
 
         listarProdutos();
-
         System.out.print("ID do produto: ");
         int id = sc.nextInt();
 
         Produto p = buscarProduto(id);
-
         if (p == null) {
             System.out.println("Produto não encontrado");
             return;
         }
 
         sc.nextLine();
-
         System.out.print("Novo nome: ");
         p.setNome(sc.nextLine());
 
@@ -97,19 +92,16 @@ public class SistemaEcommerce {
     }
 
     public void removerProduto() {
-
-        if (!adminLogado) {
+        if (!(usuarioLogado instanceof Administrador)) {
             System.out.println("Acesso negado!");
             return;
         }
 
         listarProdutos();
-
         System.out.print("ID do produto: ");
         int id = sc.nextInt();
 
         Produto p = buscarProduto(id);
-
         if (p == null) {
             System.out.println("Produto não encontrado");
             return;
@@ -156,8 +148,7 @@ public class SistemaEcommerce {
     }
 
     public void cadastrarCliente() {
-
-        if (clienteLogado != null) {
+        if (usuarioLogado != null) {
             System.out.println("Você já está logado");
             return;
         }
@@ -165,8 +156,7 @@ public class SistemaEcommerce {
         System.out.println("==== CADASTRO ====");
 
         try {
-            int id = contadorCliente++;
-
+            int id = contadorUsuario++;
             sc.nextLine();
 
             System.out.print("Nome: ");
@@ -183,9 +173,11 @@ public class SistemaEcommerce {
             String senha = sc.nextLine();
 
             Cliente cliente = new Cliente(id, nome, idade, email, senha);
+            usuarioLogado = cliente;
+            usuarios.add(cliente);
 
-            clienteLogado = cliente;
             System.out.println("Cadastro realizado com sucesso!");
+            cliente.exibirTipoUsuario();
 
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
@@ -193,51 +185,57 @@ public class SistemaEcommerce {
     }
 
     public void exibirDadosCliente() {
-        if (clienteLogado == null) {
-            System.out.println("Nenhum cliente logado");
+        if (usuarioLogado == null) {
+            System.out.println("Nenhum usuário logado");
             return;
         }
 
         System.out.println("===== SUA CONTA =====");
-        System.out.println("ID: " + clienteLogado.getId());
-        System.out.println("Nome: " + clienteLogado.getNome());
-        System.out.println("Idade: " + clienteLogado.getIdade());
-        System.out.println("Email: " + clienteLogado.getEmail());
+        usuarioLogado.exibirDados();
     }
 
     public void sairConta() {
-        if (clienteLogado == null) {
-            System.out.println("Nenhum cliente logado");
+        if (usuarioLogado == null) {
+            System.out.println("Nenhum usuário logado");
             return;
         }
 
-        clienteLogado = null;
+        usuarioLogado = null;
         carrinho.limparCarrinho();
         System.out.println("Logout realizado com sucesso");
     }
 
     public void finalizarCompra() {
-
         if (carrinho.getItens().isEmpty()) {
             System.out.println("Carrinho vazio!");
             return;
         }
 
-        if (clienteLogado == null) {
+        if (usuarioLogado == null) {
             System.out.println("Você precisa se cadastrar primeiro");
             cadastrarCliente();
 
-            if (clienteLogado == null) {
+            if (usuarioLogado == null) {
                 System.out.println("Cadastro não realizado");
                 return;
             }
         }
 
-        Pedido pedido = new Pedido(contadorPedido++, clienteLogado, carrinho.getItens());
+        Pedido pedido = new Pedido(contadorPedido++, usuarioLogado, carrinho.getItens());
         pedidos.add(pedido);
 
         pedido.exibirResumo();
+        
         carrinho.limparCarrinho();
+    }
+
+    public void listarTodosUsuarios() {
+        System.out.println("===== TODOS OS USUÁRIOS CADASTRADOS =====");
+        for (Usuario u : usuarios) {
+            System.out.println("---");
+            u.exibirDados();
+            u.exibirTipoUsuario();
+        }
     }
 
     public void menuAdmin() {
@@ -249,7 +247,8 @@ public class SistemaEcommerce {
             System.out.println("2 - Cadastrar produto");
             System.out.println("3 - Alterar produto");
             System.out.println("4 - Remover produto");
-            System.out.println("5 - Logout admin");
+            System.out.println("5 - Listar usuários (demo polimorfismo)");
+            System.out.println("6 - Logout admin");
             System.out.print("Escolha: ");
 
             opcao = sc.nextInt();
@@ -268,13 +267,16 @@ public class SistemaEcommerce {
                     removerProduto();
                     break;
                 case 5:
+                    listarTodosUsuarios();
+                    break;
+                case 6:
                     logoutAdmin();
                     break;
                 default:
                     System.out.println("Opção inválida!");
             }
 
-        } while (opcao != 5);
+        } while (opcao != 6);
     }
 
     public void menu() {
