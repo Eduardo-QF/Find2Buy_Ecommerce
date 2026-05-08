@@ -1,3 +1,6 @@
+// model/Cliente.java
+package br.com.ecommerce.model;
+
 public class Cliente extends Usuario {
     private int idade;
 
@@ -6,13 +9,11 @@ public class Cliente extends Usuario {
         setIdade(idade);
     }
 
-    public int getIdade() {
-        return idade;
-    }
+    public int getIdade() { return idade; }
 
     public void setIdade(int idade) {
         if (idade < 18) {
-            throw new IllegalArgumentException("Você precisa ter mais de 18 anos de idade");
+            throw new IllegalArgumentException("Cliente precisa ter 18 anos ou mais");
         }
         this.idade = idade;
     }
@@ -29,10 +30,8 @@ public class Cliente extends Usuario {
     }
 
     public boolean isMaiorIdade() {
-        return idade >= 18;
-    }
+        return idade >= 18; }
 
     public boolean isMaiorIdade(int idadeMinima) {
-        return idade >= idadeMinima;
-    }
+        return idade >= idadeMinima; }
 }

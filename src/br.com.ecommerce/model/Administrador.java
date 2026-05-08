@@ -1,13 +1,17 @@
+package br.com.ecommerce.model;
+
 public class Administrador extends Usuario {
     private String cargo;
     private String setor;
 
+    //METODOS CONSTRUTOR
     public Administrador(int id, String nome, String email, String senha, String cargo, String setor) {
         super(id, nome, email, senha);
         this.cargo = cargo;
         this.setor = setor;
     }
 
+    // GETTERS E SETTERS
     public String getCargo() {
         return cargo;
     }
@@ -24,9 +28,10 @@ public class Administrador extends Usuario {
         this.setor = setor;
     }
 
+    //METODOS
     @Override
     public void exibirTipoUsuario() {
-        System.out.println("Tipo: Administrador");
+        System.out.println("Tipo: br.com.ecommerce.model.Administrador");
     }
 
     @Override

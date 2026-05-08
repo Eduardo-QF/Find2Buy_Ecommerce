@@ -1,3 +1,5 @@
+package br.com.ecommerce.model;
+
 public class Produto {
     private int id;
     private String nome;

@@ -1,3 +1,5 @@
+package br.com.ecommerce.model;
+
 public class ItemCarrinho {
     private Produto produto;
     private int quantidade;
@@ -24,7 +26,7 @@ public class ItemCarrinho {
     }
 
     public double calcularSubtotal() {
-            return produto.getPreco() * quantidade;
-        }
+        return produto.getPreco() * quantidade;
+    }
 
 }

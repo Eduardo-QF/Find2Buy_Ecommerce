@@ -1,9 +1,12 @@
-public class Usuario {
+package br.com.ecommerce.model;
+
+public abstract class  Usuario {
     protected int id;
     protected String nome;
     protected String email;
     protected String senha;
 
+    //METODO CONSTRUTOR
     public Usuario(int id, String nome, String email, String senha) {
         this.id = id;
         setNome(nome);
@@ -11,6 +14,7 @@ public class Usuario {
         setSenha(senha);
     }
 
+    //GETTERS SETTERS
     public int getId() {
         return id;
     }
@@ -48,10 +52,10 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public void exibirTipoUsuario() {
-        System.out.println("Tipo: Usuário genérico");
-    }
+    //METODO ABSTRATO, a classe cliente faz o override desse metodo
+    public abstract void exibirTipoUsuario();
 
+    //METODOS CONCRETOS, prontos para serem usados ou herdados
     public void exibirDados() {
         System.out.println("ID: " + id);
         System.out.println("Nome: " + nome);
@@ -66,3 +70,5 @@ public class Usuario {
         return this.senha.equals(senha);
     }
 }
+
+

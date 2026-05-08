@@ -1,3 +1,5 @@
+package br.com.ecommerce.model;
+
 import java.util.*;
 
 public class Pedido {
