@@ -12,7 +12,7 @@ public class TesteCrud {
         System.out.println("=== TESTE CRUD CLIENTE ===\n");
 
         System.out.println("1. Criando cliente...");
-        Cliente novoCliente = new Cliente(1, "Joao Silva", 25, "joao@email.com", "123456");
+        Cliente novoCliente = new Cliente(1, "Joao Silva", 25, "joao@email.com", "123456", "12345-678");
         clienteDao.create(novoCliente);
 
         System.out.println("\n2. Buscando cliente ID 1...");
@@ -25,7 +25,7 @@ public class TesteCrud {
         }
 
         System.out.println("\n3. Atualizando cliente...");
-        Cliente clienteAtualizado = new Cliente(1, "Joao Santos", 26, "joao.santos@email.com", "123456");
+        Cliente clienteAtualizado = new Cliente(1, "Joao Santos", 26, "joao.santos@email.com", "123456", "98765-432");
         clienteDao.update(clienteAtualizado);
 
         System.out.println("\n4. Listando todos clientes...");
@@ -42,7 +42,7 @@ public class TesteCrud {
         System.out.println("\n5. Deletando cliente ID 1...");
         clienteDao.delete(1);
 
-        System.out.println("\nTeste CRUD finalizado!");
+        System.out.println("\n=== TESTE CRUD FINALIZADO ===");
 
         br.com.ecommerce.database.DatabaseConnection.closeConnection();
     }

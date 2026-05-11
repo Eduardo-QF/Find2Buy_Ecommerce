@@ -3,12 +3,16 @@ package br.com.ecommerce.model;
 
 public class Cliente extends Usuario {
     private int idade;
+    private String cep;
 
-    public Cliente(int id, String nome, int idade, String email, String senha) {
+    public Cliente(int id, String nome, int idade, String email, String senha, String cep) {
         super(id, nome, email, senha);
-        setIdade(idade);
+        this.idade = idade;
+        this.cep = cep;
+
     }
 
+    //Getters Setters
     public int getIdade() { return idade; }
 
     public void setIdade(int idade) {
@@ -17,6 +21,9 @@ public class Cliente extends Usuario {
         }
         this.idade = idade;
     }
+
+    public String getCep() { return cep; }
+    public void setCep(String cep) { this.cep = cep; }
 
     @Override
     public void exibirTipoUsuario() {

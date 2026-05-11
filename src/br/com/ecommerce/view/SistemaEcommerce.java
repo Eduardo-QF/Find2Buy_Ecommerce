@@ -3,6 +3,10 @@ package br.com.ecommerce.view;
 import br.com.ecommerce.dao.ClienteDao;
 import br.com.ecommerce.dao.ProdutoDao;
 import br.com.ecommerce.model.*;
+import br.com.ecommerce.strategy.CalculadoraFrete;
+import br.com.ecommerce.strategy.FreteExpresso;
+import br.com.ecommerce.strategy.FreteNormal;
+
 import java.util.InputMismatchException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +23,21 @@ public class SistemaEcommerce {
     private int contadorUsuario = 1;
     private ClienteDao clienteDao = new ClienteDao();
     private ProdutoDao produtoDao = new ProdutoDao(); // Um atributo que cria o objeto ProdutoDao e declara
+    private CalculadoraFrete freteNormal; //frete padrão
+    private CalculadoraFrete freteExpresso; //frete rápido
+    private CalculadoraFrete freteSelecionado; // O que foi escolhido pelo cliente
 
     Scanner sc = new Scanner(System.in);
+
+    //Construtor
+    public SistemaEcommerce() {
+        // Cria os objetos das classes que implementam a interface
+        freteNormal = new FreteNormal();      // ← instancia a classe
+        freteExpresso = new FreteExpresso();  // ← instancia a classe
+        freteSelecionado = freteNormal;       // começa com frete normal
+    }
+
+
 
     public void loginCliente() {
         if (usuarioLogado != null) {
@@ -221,7 +238,10 @@ public class SistemaEcommerce {
             System.out.print("Senha: ");
             String senha = sc.nextLine();
 
-            Cliente cliente = new Cliente(id, nome, idade, email, senha);
+            System.out.print("CEP: ");  // NOVO
+            String cep = sc.nextLine();  // NOVO
+
+            Cliente cliente = new Cliente(id, nome, idade, email, senha, cep);
             clienteDao.create(cliente);
             usuarios.add(cliente);
 
@@ -261,13 +281,50 @@ public class SistemaEcommerce {
         }
 
         if (usuarioLogado == null) {
-            System.out.println("Voce precisa se cadastrar primeiro");
-            cadastrarCliente();
+            System.out.println("Você precisa se cadastrar ou estar logado primeiro");
+            System.out.println("Você já possui cadastro 1(Não)/2(Sim)");
+
+            int opcao = sc.nextInt();
+
+            if (opcao == 1) {
+                loginCliente();
+            } else if (opcao == 2) {
+                cadastrarCliente();
+            } else {
+                System.out.println("Opção inválida");
+            }
+
 
             if (usuarioLogado == null) {
-                System.out.println("Cadastro nao realizado");
+                System.out.println("Cadastro ou login nao realizado");
                 return;
             }
+        }
+
+        // PERGUNTAR O TIPO DE FRETE ANTES DE FINALIZAR
+        System.out.println("\nAntes de finalizar, escolha o tipo de frete:");
+        escolherFrete();
+
+        // Calcular valores com o frete selecionado
+        double subtotal = carrinho.calcularTotal();
+        double frete = calcularFrete();
+        double total = subtotal + frete;
+
+        // Mostrar resumo da compra
+        System.out.println("\n===== RESUMO DA COMPRA =====");
+        carrinho.listarCarrinho();
+        System.out.println("--------------------------------");
+        System.out.println("Subtotal: R$ " + String.format("%.2f", subtotal));
+        System.out.println("Frete: R$ " + String.format("%.2f", frete));
+        System.out.println("--------------------------------");
+        System.out.println("TOTAL A PAGAR: R$ " + String.format("%.2f", total));
+
+        System.out.print("\nConfirmar compra? (1-Sim / 2-Nao): ");
+        int confirmar = sc.nextInt();
+
+        if (confirmar != 1) {
+            System.out.println("Compra cancelada!");
+            return;
         }
 
         // Atualizar estoque de cada item no carrinho
@@ -280,7 +337,10 @@ public class SistemaEcommerce {
         Pedido pedido = new Pedido(contadorPedido++, usuarioLogado, carrinho.getItens());
         pedidos.add(pedido);
 
+        System.out.println("\nCOMPRA FINALIZADA COM SUCESSO!");
         pedido.exibirResumo();
+        System.out.println("Frete utilizado: " + (freteSelecionado instanceof FreteExpresso ? "Expresso" : "Normal"));
+        System.out.println("Total pago: R$ " + String.format("%.2f", total));
 
         carrinho.limparCarrinho();
     }
@@ -311,6 +371,54 @@ public class SistemaEcommerce {
             }
         }
     }
+
+    //FRETE
+    // Método para escolher frete
+    public void escolherFrete() {
+        System.out.println("\n===== ESCOLHA O TIPO DE FRETE =====");
+        System.out.println("1 - Frete Normal");
+        System.out.println("2 - Frete Expresso");
+        System.out.print("Escolha: ");
+
+        int opcao = sc.nextInt();
+
+        if (opcao == 2) {
+            freteSelecionado = freteExpresso;
+            System.out.println("Frete Expresso selecionado!");
+        } else {
+            freteSelecionado = freteNormal;
+            System.out.println("Frete Normal selecionado!");
+        }
+    }
+
+    private String obterCepCliente() {
+        if (usuarioLogado instanceof Cliente) {
+            Cliente cliente = (Cliente) usuarioLogado;
+            String cep = cliente.getCep();
+
+            if (cep != null && !cep.isEmpty()) {
+                return cep;
+            }
+        }
+
+        // Se não tiver CEP, pergunta
+        System.out.print("Digite seu CEP para calcular o frete: ");
+        String cepDigitado = sc.nextLine();
+
+        // Validação básica - foi usado o trim para remover espaços no começo e no fim da string
+        while (cepDigitado == null || cepDigitado.trim().isEmpty()) {
+            System.out.print("CEP não pode ficar vazio! Digite novamente: ");
+            cepDigitado = sc.nextLine();
+        }
+
+        return cepDigitado;
+    }
+
+    public double calcularFrete() {
+        String cep = obterCepCliente();
+        return freteSelecionado.calcular(cep);  // ← chama o método da classe escolhida
+    }
+
 
     public void menuAdmin() {
         int opcao = 0;
@@ -387,7 +495,20 @@ public class SistemaEcommerce {
                         break;
                     case 3:
                         carrinho.listarCarrinho();
-                        System.out.println("Total: R$ " + carrinho.calcularTotal());
+                        double subtotalCarrinho = carrinho.calcularTotal();
+                        System.out.println("Subtotal: R$ " + String.format("%.2f", subtotalCarrinho));
+
+                        // Perguntar se quer ver opções de frete
+                        System.out.print("\nDeseja calcular frete? (1-Sim / 2-Nao): ");
+                        int calcFrete = sc.nextInt();
+
+                        if (calcFrete == 1) {
+                            escolherFrete();
+                            double freteCarrinho = calcularFrete();
+                            double totalCarrinho = subtotalCarrinho + freteCarrinho;
+                            System.out.println("Frete: R$ " + String.format("%.2f", freteCarrinho));
+                            System.out.println("TOTAL COM FRETE: R$ " + String.format("%.2f", totalCarrinho));
+                        }
                         break;
                     case 4:
                         finalizarCompra();

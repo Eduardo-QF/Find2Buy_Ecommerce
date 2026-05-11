@@ -48,7 +48,8 @@ public class ClienteDao implements Dao<Usuario> {
                         rs.getString("nome"),
                         rs.getInt("idade"),
                         rs.getString("email"),
-                        rs.getString("senha")
+                        rs.getString("senha"),
+                        rs.getString("cep")
                 );
             }
 
@@ -73,7 +74,8 @@ public class ClienteDao implements Dao<Usuario> {
                         rs.getString("nome"),
                         rs.getInt("idade"),
                         rs.getString("email"),
-                        rs.getString("senha")
+                        rs.getString("senha"),
+                        rs.getString("cep")
                 );
                 clientes.add(cliente);
             }
@@ -138,7 +140,9 @@ public class ClienteDao implements Dao<Usuario> {
                         rs.getString("nome"),
                         rs.getInt("idade"),
                         rs.getString("email"),
-                        rs.getString("senha")
+                        rs.getString("senha"),
+                        rs.getString("cep")
+
                 );
             }
 
