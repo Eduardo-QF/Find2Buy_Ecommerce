@@ -282,7 +282,7 @@ public class SistemaEcommerce {
 
         if (usuarioLogado == null) {
             System.out.println("Você precisa se cadastrar ou estar logado primeiro");
-            System.out.println("Você já possui cadastro 1(Não)/2(Sim)");
+            System.out.println("Você já possui cadastro 1 - (Sim) / 2 - (Não)");
 
             int opcao = sc.nextInt();
 
@@ -373,7 +373,7 @@ public class SistemaEcommerce {
     }
 
     //FRETE
-    // Método para escolher frete
+    //Método para escolher frete
     public void escolherFrete() {
         System.out.println("\n===== ESCOLHA O TIPO DE FRETE =====");
         System.out.println("1 - Frete Normal");
