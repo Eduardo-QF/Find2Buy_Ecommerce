@@ -1,7 +1,7 @@
 package br.com.ecommerce.strategy;
 
 public class FreteExpresso implements CalculadoraFrete {
-
+    //METODO SOBRESCRITO
     @Override
     public double calcular(String cep) {
         if (cep == null || cep.isEmpty()) return 45.0;

@@ -1,6 +1,7 @@
 package br.com.ecommerce.model;
 
 public class Administrador extends Usuario {
+    //ATRIBUTOS
     private String cargo;
     private String setor;
 
@@ -28,7 +29,7 @@ public class Administrador extends Usuario {
         this.setor = setor;
     }
 
-    //METODOS
+    //METODOS SOBRESCRITOS
     @Override
     public void exibirTipoUsuario() {
         System.out.println("Tipo: Administrador");
@@ -41,15 +42,8 @@ public class Administrador extends Usuario {
         System.out.println("Setor: " + setor);
     }
 
+    //METODOS
     public void gerenciarSistema() {
         System.out.println("Administrador " + nome + " está gerenciando o sistema");
-    }
-
-    public void gerenciarSistema(String funcionalidade) {
-        System.out.println("Administrador " + nome + " gerenciando: " + funcionalidade);
-    }
-
-    public void gerenciarSistema(String funcionalidade, int prioridade) {
-        System.out.println("Administrador " + nome + " gerenciando: " + funcionalidade + " (Prioridade: " + prioridade + ")");
     }
 }

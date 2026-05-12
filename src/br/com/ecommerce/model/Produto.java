@@ -1,11 +1,13 @@
 package br.com.ecommerce.model;
 
 public class Produto {
+    //ATRIBUTOS
     private int id;
     private String nome;
     private double preco;
     private int estoque;
 
+    //CLASSE CONSTRUTORA
     public Produto(int id, String nome, double preco, int estoque) {
         this.id = id;
         setNome(nome);
@@ -13,6 +15,7 @@ public class Produto {
         setEstoque(estoque);
     }
 
+    //GETTERS SETTERS
     public int getId() {
         return id;
     }
@@ -52,6 +55,7 @@ public class Produto {
         }
     }
 
+    //METODOS
     public void exibirDetalhes() {
         System.out.println(id + " | " + nome + " | " + "R$ " + preco + " | " + "Estoque " + estoque);
     }
@@ -75,19 +79,5 @@ public class Produto {
     public void atualizarPreco(double novoPreco) {
         setPreco(novoPreco);
         System.out.println("Preço atualizado para R$" + novoPreco);
-    }
-
-    public void atualizarPreco(double novoPreco, double desconto) {
-        double precoComDesconto = novoPreco - (novoPreco * desconto / 100);
-        setPreco(precoComDesconto);
-        System.out.println("Preço atualizado com " + desconto + "% de desconto: R$" + precoComDesconto);
-    }
-
-    public void atualizarPreco(String promocao, double desconto) {
-        if (promocao.equalsIgnoreCase("BLACKFRIDAY")) {
-            double precoPromocional = preco - (preco * desconto / 100);
-            setPreco(precoPromocional);
-            System.out.println("Preço promocional Black Friday: R$" + precoPromocional);
-        }
     }
 }

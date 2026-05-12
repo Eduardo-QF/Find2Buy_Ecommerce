@@ -1,14 +1,16 @@
 package br.com.ecommerce.model;
 
 import java.util.*;
-
+//Compra finalizada
 public class Pedido {
+    //ATRIBUTOS
     private int id;
     private Usuario usuario;
-    private List<ItemCarrinho> itens;
+    private List<ItemCarrinho> itens; //copia da lista do carrinho
     private double total;
     private String status;
 
+    //CLASSE CONSTRUTORA
     public Pedido(int id, Usuario usuario, List<ItemCarrinho> itens) {
         this.id = id;
         this.usuario = usuario;
@@ -17,7 +19,8 @@ public class Pedido {
         this.status = "PAGO";
     }
 
-    public double calcularTotal() {
+    //É importante ter ele aqui pois o pedido não pode mudar, ele guarda o valor que foi pago
+    public double calcularTotal() { //calcula sobre a lista copia do carrinho
         double total = 0;
         for (ItemCarrinho item : itens) {
             total += item.calcularSubtotal();
@@ -38,12 +41,5 @@ public class Pedido {
 
         System.out.println("TOTAL: R$" + total);
         System.out.println("Status: " + status);
-    }
-
-    public void exibirResumo(double descontoPercentual) {
-        double valorComDesconto = total - (total * descontoPercentual / 100);
-        exibirResumo();
-        System.out.println("DESCONTO: " + descontoPercentual + "%");
-        System.out.println("TOTAL COM DESCONTO: R$" + valorComDesconto);
     }
 }

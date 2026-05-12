@@ -2,12 +2,13 @@
 package br.com.ecommerce.model;
 
 public class Cliente extends Usuario {
+    //ATRIBUTOS
     private int idade;
     private String cep;
 
     public Cliente(int id, String nome, int idade, String email, String senha, String cep) {
         super(id, nome, email, senha);
-        this.idade = idade;
+        setIdade(idade);
         this.cep = cep;
 
     }
@@ -25,6 +26,7 @@ public class Cliente extends Usuario {
     public String getCep() { return cep; }
     public void setCep(String cep) { this.cep = cep; }
 
+//    METODOS SOBRESCRITOS
     @Override
     public void exibirTipoUsuario() {
         System.out.println("Tipo: Cliente");
@@ -36,9 +38,7 @@ public class Cliente extends Usuario {
         System.out.println("Idade: " + idade);
     }
 
+    //METODO
     public boolean isMaiorIdade() {
         return idade >= 18; }
-
-    public boolean isMaiorIdade(int idadeMinima) {
-        return idade >= idadeMinima; }
 }

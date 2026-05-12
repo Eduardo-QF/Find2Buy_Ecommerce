@@ -14,11 +14,11 @@ import java.util.Scanner;
 
 public class SistemaEcommerce {
     //ATRIBUTOS
-    private List<Produto> produtos = new ArrayList<>();
-    private List<Pedido> pedidos = new ArrayList<>();
-    private Carrinho carrinho = new Carrinho();
+    //private List<Produto> produtos = new ArrayList<>(); Lista local "removida" devido a conexão com o banco de dados, isso impede lista local e DAO ficarem diferentes
+    private List<Pedido> pedidos = new ArrayList<>(); //Historico em memória
+    private Carrinho carrinho = new Carrinho(); //Carrinho atual, é uma sessão atual, oque não faria sentido salvar no banco
     private Usuario usuarioLogado = null;
-    private List<Usuario> usuarios = new ArrayList<>();
+    //private List<Usuario> usuarios = new ArrayList<>(); Lista local "removida" devido a conexão com banco de dados
     private int contadorPedido = 1;
     private int contadorUsuario = 1;
     private ClienteDao clienteDao = new ClienteDao();
@@ -80,7 +80,7 @@ public class SistemaEcommerce {
                     "Gerente Geral",
                     "Tecnologia");
             usuarioLogado = admin;
-            usuarios.add(admin);
+            // usuarios.add(admin);
             System.out.println("Admin logado com sucesso!");
             admin.exibirDados();
             admin.gerenciarSistema();
@@ -166,7 +166,7 @@ public class SistemaEcommerce {
         }
 
         produtoDao.delete(id);  //  remove do banco
-        produtos.remove(p);     // remove da lista em memoria
+        //produtos.remove(p);     // remove da lista em memoria
         System.out.println("Produto removido!");
     }
 
@@ -243,7 +243,7 @@ public class SistemaEcommerce {
 
             Cliente cliente = new Cliente(id, nome, idade, email, senha, cep);
             clienteDao.create(cliente);
-            usuarios.add(cliente);
+            //usuarios.add(cliente);
 
             System.out.println("Cadastro realizado com sucesso!");
             cliente.exibirTipoUsuario();
@@ -346,25 +346,14 @@ public class SistemaEcommerce {
     }
 
     public void listarTodosUsuarios() {
-        System.out.println("===== TODOS OS USUARIOS DO BANCO =====");
+        System.out.println("===== TODOS OS USUARIOS =====");
 
-        List<Usuario> clientesDoBanco = clienteDao.readAll();
+        List<Usuario> todosUsuarios = clienteDao.readAll();
 
-        if (clientesDoBanco.isEmpty()) {
-            System.out.println("Nenhum usuario cadastrado no banco!");
+        if (todosUsuarios.isEmpty()) {
+            System.out.println("Nenhum usuario cadastrado!");
         } else {
-            for (Usuario u : clientesDoBanco) {
-                System.out.println("---");
-                u.exibirDados();
-                u.exibirTipoUsuario();
-            }
-        }
-
-        System.out.println("\n===== USUARIOS NA LISTA DE MEMORIA =====");
-        if (usuarios.isEmpty()) {
-            System.out.println("Nenhum usuario na lista de memoria!");
-        } else {
-            for (Usuario u : usuarios) {
+            for (Usuario u : todosUsuarios) {
                 System.out.println("---");
                 u.exibirDados();
                 u.exibirTipoUsuario();
@@ -416,7 +405,7 @@ public class SistemaEcommerce {
 
     public double calcularFrete() {
         String cep = obterCepCliente();
-        return freteSelecionado.calcular(cep);  // ← chama o método da classe escolhida
+        return freteSelecionado.calcular(cep);  // Chama o método da classe escolhida
     }
 
 
@@ -471,7 +460,7 @@ public class SistemaEcommerce {
 
         do {
             try {
-                System.out.println("\n===== E-COMMERCE =====");
+                System.out.println("\n===== Find2Buy - ECOMMERCE =====");
                 System.out.println("1 - Listar produtos");
                 System.out.println("2 - Adicionar ao carrinho");
                 System.out.println("3 - Ver carrinho");
