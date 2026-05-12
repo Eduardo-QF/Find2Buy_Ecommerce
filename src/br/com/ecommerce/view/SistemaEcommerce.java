@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class SistemaEcommerce {
-
+    //ATRIBUTOS
     private List<Produto> produtos = new ArrayList<>();
     private List<Pedido> pedidos = new ArrayList<>();
     private Carrinho carrinho = new Carrinho();

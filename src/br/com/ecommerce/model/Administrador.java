@@ -31,7 +31,7 @@ public class Administrador extends Usuario {
     //METODOS
     @Override
     public void exibirTipoUsuario() {
-        System.out.println("Tipo: br.com.ecommerce.model.Administrador");
+        System.out.println("Tipo: Administrador");
     }
 
     @Override
