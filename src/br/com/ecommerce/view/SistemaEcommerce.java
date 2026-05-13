@@ -112,8 +112,8 @@ public class SistemaEcommerce {
         System.out.print("Estoque: ");
         int estoque = sc.nextInt();
 
-        int id = produtoDao.readAll().size() + 1;
-        Produto p = new Produto(id, nome, preco, estoque);
+        // ID = 0 (temporário) - o banco vai gerar o ID real
+        Produto p = new Produto(0, nome, preco, estoque);
         produtoDao.create(p);  // Salva no banco
 
         System.out.println("Produto cadastrado no banco de dados!");
@@ -220,11 +220,9 @@ public class SistemaEcommerce {
         }
 
         System.out.println("==== CADASTRO ====");
+        sc.nextLine();
 
         try {
-            int id = contadorUsuario++;
-            sc.nextLine();
-
             System.out.print("Nome: ");
             String nome = sc.nextLine();
 
@@ -238,10 +236,10 @@ public class SistemaEcommerce {
             System.out.print("Senha: ");
             String senha = sc.nextLine();
 
-            System.out.print("CEP: ");  // NOVO
-            String cep = sc.nextLine();  // NOVO
+            System.out.print("CEP: ");
+            String cep = sc.nextLine();
 
-            Cliente cliente = new Cliente(id, nome, idade, email, senha, cep);
+            Cliente cliente = new Cliente(0, nome, idade, email, senha, cep);
             clienteDao.create(cliente);
             //usuarios.add(cliente);
 

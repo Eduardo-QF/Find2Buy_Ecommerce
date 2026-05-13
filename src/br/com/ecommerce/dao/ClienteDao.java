@@ -13,18 +13,25 @@ public class ClienteDao implements Dao<Usuario> {
     @Override
     public void create(Usuario usuario) {
         Cliente cliente = (Cliente) usuario;
-        String sql = "INSERT INTO clientes (id, nome, email, senha, idade) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO clientes (nome, email, senha, idade, cep) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            pstmt.setInt(1, cliente.getId());
-            pstmt.setString(2, cliente.getNome());
-            pstmt.setString(3, cliente.getEmail());
-            pstmt.setString(4, cliente.getSenha());
-            pstmt.setInt(5, cliente.getIdade());
+            pstmt.setString(1, cliente.getNome());
+            pstmt.setString(2, cliente.getEmail());
+            pstmt.setString(3, cliente.getSenha());
+            pstmt.setInt(4, cliente.getIdade());
+            pstmt.setString(5, cliente.getCep());
 
             pstmt.executeUpdate();
+
+            // Pega o ID gerado pelo banco
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                cliente.setId(rs.getInt(1));
+            }
+
             System.out.println("Cliente cadastrado no banco de dados!");
 
         } catch (SQLException e) {

@@ -10,17 +10,22 @@ public class ProdutoDao implements Dao<Produto> {
 
     @Override
     public void create(Produto produto) {
-        String sql = "INSERT INTO produtos (id, nome, preco, estoque) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            pstmt.setInt(1, produto.getId());
-            pstmt.setString(2, produto.getNome());
-            pstmt.setDouble(3, produto.getPreco());
-            pstmt.setInt(4, produto.getEstoque());
+            pstmt.setString(1, produto.getNome());
+            pstmt.setDouble(2, produto.getPreco());
+            pstmt.setInt(3, produto.getEstoque());
 
             pstmt.executeUpdate();
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                produto.setId(rs.getInt(1));
+            }
+
             System.out.println("Produto salvo no banco de dados!");
 
         } catch (SQLException e) {

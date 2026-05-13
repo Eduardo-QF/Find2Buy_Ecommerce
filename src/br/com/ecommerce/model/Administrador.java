@@ -44,6 +44,6 @@ public class Administrador extends Usuario {
 
     //METODOS
     public void gerenciarSistema() {
-        System.out.println("Administrador " + nome + " está gerenciando o sistema");
+        System.out.println( nome + " está gerenciando o sistema");
     }
 }
