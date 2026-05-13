@@ -6,7 +6,7 @@ import java.util.List;
 // Sacola temporaria de compras, armazena uma lista de itens individuais
 public class Carrinho {
     //ATRIBUTO
-    List<ItemCarrinho> itens = new ArrayList<>(); //O
+    List<ItemCarrinho> itens = new ArrayList<>();
 
     //METODOS
     public List<ItemCarrinho> getItens() {

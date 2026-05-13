@@ -488,15 +488,21 @@ public class SistemaEcommerce {
                         System.out.println("Subtotal: R$ " + String.format("%.2f", subtotalCarrinho));
 
                         // Perguntar se quer ver opções de frete
-                        System.out.print("\nDeseja calcular frete? (1-Sim / 2-Nao): ");
-                        int calcFrete = sc.nextInt();
+                        if (!carrinho.getItens().isEmpty()) {
+                            System.out.print("\nDeseja calcular frete? (1-Sim / 2-Nao): ");
+                            int calcFrete = sc.nextInt();
 
-                        if (calcFrete == 1) {
-                            escolherFrete();
-                            double freteCarrinho = calcularFrete();
-                            double totalCarrinho = subtotalCarrinho + freteCarrinho;
-                            System.out.println("Frete: R$ " + String.format("%.2f", freteCarrinho));
-                            System.out.println("TOTAL COM FRETE: R$ " + String.format("%.2f", totalCarrinho));
+                            if (calcFrete == 1) {
+                                escolherFrete();
+                                double freteCarrinho = calcularFrete();
+                                double totalCarrinho = subtotalCarrinho + freteCarrinho;
+                                System.out.println("Frete: R$ " + String.format("%.2f", freteCarrinho));
+                                System.out.println("TOTAL COM FRETE: R$ " + String.format("%.2f", totalCarrinho));
+                            }
+                        }
+
+                        else {
+                            System.out.println("Não é possível calcular frete");
                         }
                         break;
                     case 4:
