@@ -32,8 +32,8 @@ public class SistemaEcommerce {
     //Construtor
     public SistemaEcommerce() {
         // Cria os objetos das classes que implementam a interface
-        freteNormal = new FreteNormal();      // ← instancia a classe
-        freteExpresso = new FreteExpresso();  // ← instancia a classe
+        freteNormal = new FreteNormal();      // instancia a classe
+        freteExpresso = new FreteExpresso();  // instancia a classe
         freteSelecionado = freteNormal;       // começa com frete normal
     }
 
@@ -246,6 +246,17 @@ public class SistemaEcommerce {
             System.out.println("Cadastro realizado com sucesso!");
             cliente.exibirTipoUsuario();
 
+            System.out.println("\nRealizando login automatico...");
+
+            Usuario usuarioLogadoAposCadastro = clienteDao.autenticar(email, senha);
+
+            if (usuarioLogadoAposCadastro != null) {
+                usuarioLogado = usuarioLogadoAposCadastro;
+                System.out.println("Login automatico realizado com sucesso!");
+                usuarioLogado.exibirDados();
+            } else {
+                System.out.println("Erro no login automatico. Faca login manualmente.");
+            }
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
         }
